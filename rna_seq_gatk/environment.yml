@@ -1,0 +1,9 @@
+name: base
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - conda=4.5.8
+  - gatk=3.8
+prefix: /opt/conda

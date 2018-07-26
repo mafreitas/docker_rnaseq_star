@@ -1,0 +1,14 @@
+name: base
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - conda=4.5.8
+  - cutadapt=1.16=py36_2
+  - fastqc=0.11.7=pl5.22.0_0
+  - multiqc=1.6a0=py36h24bf2e0_2
+  - star=2.6.0c=1
+  - subread=1.6.2=ha92aebf_0
+  - trim-galore=0.5.0=0
+prefix: /opt/conda
