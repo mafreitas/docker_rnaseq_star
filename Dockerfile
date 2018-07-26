@@ -8,4 +8,4 @@ RUN conda config --add channels defaults && \
 
 RUN conda install -y star multiqc trim-galore subread fastqc
 
-RUN conda install -y picard
+RUN conda install -y picard gatk
