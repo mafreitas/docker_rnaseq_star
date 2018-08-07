@@ -9,5 +9,5 @@ RUN conda config --add channels defaults && \
 
 RUN conda env update -f environment.yml
 
-RUN conda list
-RUN conda info
+#RUN conda list
+#RUN conda info
