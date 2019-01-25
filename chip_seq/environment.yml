@@ -1,0 +1,9 @@
+name: base
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - fastqc
+  - sra-tools
+prefix: /opt/conda

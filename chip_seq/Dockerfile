@@ -9,6 +9,14 @@ RUN conda config --add channels defaults && \
 
 RUN conda env update -f environment.yml
 
+RUN wget -qO- https://download.asperasoft.com/download/sw/connect/3.8.1/ibm-aspera-connect-3.8.1.161274-linux-g2.12-64.tar.gz | tar xvz
+
+## run it
+RUN chmod +x ibm-aspera-connect-3.8.1.161274-linux-g2.12-64.sh && \
+    ./ibm-aspera-connect-3.8.1.161274-linux-g2.12-64.sh && \
+    export PATH=$PATH:~/.aspera/connect/bin/ && \
+    echo 'export PATH=$PATH:~/.aspera/connect/bin/' >> ~/.bash_profile
+
 #RUN conda list
 #RUN conda info
 
