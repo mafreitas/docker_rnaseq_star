@@ -1,8 +1,8 @@
-**.DS_Store
+.git
 **/*.sra.*
 **/*.sra
 **/*.fastq.gz
-**/*.fastq.*
+**/*.fastaq.*
 **/*.txt
 **/*.py
 **/*.sh
