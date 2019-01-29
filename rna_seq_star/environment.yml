@@ -96,4 +96,10 @@ dependencies:
   - xz=5.2.4=h14c3975_4
   - yaml=0.1.7=had09818_2
   - zlib=1.2.11=ha838bed_2
+  - sra-tools
+  - pandas
+  - numpy
+  - snakemake
+  - bowtie2
+  - samtools
 prefix: /opt/conda
