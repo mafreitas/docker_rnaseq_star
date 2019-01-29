@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 IMAGE="chip_seq:latest"
-
-docker run -it -v $PWD:/share $IMAGE
+GENOMES="/Users/mfreitas/repos/docker_rnaseq_star/genomes"
+docker run -it -v $PWD:/share -v $GENOMES:/genomes $IMAGE

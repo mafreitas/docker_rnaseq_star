@@ -6,3 +6,7 @@
 **/*.txt
 **/*.py
 **/*.sh
+**/data
+**.log
+**/.snakemake
+**/genomes

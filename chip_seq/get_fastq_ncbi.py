@@ -3,33 +3,66 @@
 import csv
 import sys
 import subprocess
+import pandas as pd
+import os 
+import multiprocessing as mp
 
-print (sys.argv)
+THREADS = 8
 
-first_line = True
-with open(sys.argv[1]) as f:
-    for line in f:
-        lis = line.split("\t")       # create a list of lists
-        if first_line:
-            header = lis
-            first_line = False
-            print("Header Found")
-            run_accession = header.index("run_accession")
-            sra_ftp = header.index("sra_ftp")
-            print("fastq_ftp index located in column {}".format(sra_ftp))
+# for index, row in data.iterrows():
+    
+#     sra = row['run_accession']
 
-        else:
-            sra = lis[run_accession]
+#     exists = os.path.isfile("./"+sra+".conversion_complete")
+#     if exists:
+#         print("Skipping previously converted sra file {}".format(sra))
+#     else:
+#         try:
+#             fastq_dump_cmd = ["fastq-dump","--gzip","-I","--split-files","./"+sra+".sra"]
+#             print("Converting sra file {} to fastq.gz".format(sra))   
+#             subprocess.run(fastq_dump_cmd)  
+#             touch("./"+sra+".conversion_complete")
+#         except:
+#             continue
 
-            loc = "/sra/sra-instant/reads/ByRun/sra/{}/{}/{}/{}.sra".format(sra[0:3],sra[0:6],sra,sra)
-            wget_loc = "ftp://ftp-trace.ncbi.nih.gov" + loc
-            ascp_loc = "anonftp@ftp.ncbi.nlm.nih.gov:" + loc
-            ascp_rsa = "/root/.aspera/connect/etc/asperaweb_id_dsa.openssh"
+def run_sra(sra): 
 
-            #subprocess.run(["wget", "--continue", "--progress=bar", wget_loc])
-            ascp_cmd = ["ascp", "-T", "-k", "1", "-l","100m","-i",ascp_rsa,ascp_loc,"."]
-            fastq_dump_cmd = ["fastq-dump","--gzip","-I","--split-files","./"+sra+".sra"]
-            print("downloading sra file {}".format(sra))
-            subprocess.run(ascp_cmd)
-            print("Converting sra file {} to fastq.gz".format(sra))
-            subprocess.run(fastq_dump_cmd)
+    print("downloading sra file {}".format(sra))
+    loc = "/sra/sra-instant/reads/ByRun/sra/{}/{}/{}/{}.sra".format(sra[0:3],sra[0:6],sra,sra)
+    wget_loc = "ftp://ftp-trace.ncbi.nih.gov" + loc
+    ascp_loc = "anonftp@ftp.ncbi.nlm.nih.gov:" + loc
+    ascp_rsa = "/root/.aspera/connect/etc/asperaweb_id_dsa.openssh"
+    ascp_cmd = ["ascp", "-T", "-k", "1", "-l","50m","-i",ascp_rsa,ascp_loc,"."]
+    subprocess.run(ascp_cmd)
+
+def safe_run_sra(*args, **kwargs):
+    """Call run(), catch exceptions."""
+    try: run_sra(*args, **kwargs)
+    except Exception as e:
+        print("error: %s run(*%r, **%r)" % (e, args, kwargs))
+
+def run_fastq_dump(sra): 
+    print("Converting sra file {} to fastq".format(sra))   
+    fastq_dump_cmd = ["fasterq-dump","./"+sra+".sra"]
+    subprocess.run(fastq_dump_cmd)  
+
+def safe_run_fastq_dump(*args, **kwargs):
+    """Call run(), catch exceptions."""
+    try: run_fastq_dump(*args, **kwargs)
+    except Exception as e:
+        print("error: %s run(*%r, **%r)" % (e, args, kwargs))
+
+def main():
+    df= pd.read_csv(sys.argv[1],sep='\t', header=0)
+    # Preview the first 5 lines of the loaded data 
+    print(df.head())
+    sra = df["run_accession"].tolist()
+
+    # start processes
+    pool = mp.Pool(THREADS) # use all available CPUs
+    pool.map(safe_run_sra, sra)
+    pool.map(safe_run_fastq_dump, sra)
+
+if __name__=="__main__":
+    mp.freeze_support() # optional if the program is not frozen
+    main()

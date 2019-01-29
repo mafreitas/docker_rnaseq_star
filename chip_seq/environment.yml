@@ -6,4 +6,11 @@ channels:
 dependencies:
   - fastqc
   - sra-tools
+  - pandas
+  - numpy
+  - snakemake
+  - bowtie2
+  - multiqc
+  - trim-galore 
+  - samtools
 prefix: /opt/conda
